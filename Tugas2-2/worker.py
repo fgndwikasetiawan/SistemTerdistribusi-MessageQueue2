@@ -21,7 +21,7 @@ sink_socket.connect('tcp://localhost:5556')
 
 #infinite loop! worker senantiasa menunggu kerjaan
 while True:
-	#terima data gambar (dan nama file gambar) yang bertipe dictionary dari ventilator
+    #terima data gambar (dan nama file gambar) yang bertipe dictionary dari ventilator
     #img_dict mempunyai dua elemen yang diakses dengan img_dict['nama'] dan img_dict['data']
     #img_dict['nama'] adalah nama file gambar, sedangkan img_dict['data'] adalah objek StringIO yang menyimpan data gambar
     img_dict = ventilator_socket.recv_pyobj();
@@ -34,7 +34,9 @@ while True:
         #convert ke grayscale
         img = img.convert('L')
         #simpan data gambar yang baru tersebut ke img_dict['data']
-        img.save(img_dict['data'],img_format)
+        data = StringIO.StringIO()
+        img.save(data, img_format)
+        img_dict['data'] = data
         print("Konversi selesai, mengirim...")
         #kirim ke sink
         sink_socket.send_pyobj(img_dict)

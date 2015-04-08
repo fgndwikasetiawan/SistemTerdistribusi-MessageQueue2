@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 import zmq
 import os
 from PIL import Image
@@ -16,10 +14,15 @@ def get_format(filename):
 context = zmq.Context()
 #agar dapat menerima task, buat (zmq)socket yang terhubung ke ventilator
 ventilator_socket = context.socket(zmq.PULL)
-ventilator_socket.connect('tcp://localhost:5555')
+#baca alamat ventilator dari file
+file = open('ventilator', 'r')
+ventilator_socket.connect(file.read())
+file.close()
 #hasil pemrosesan akan diberikan ke sink, maka buat (zmq)socket yang terhubung ke sink
 sink_socket = context.socket(zmq.PUSH)
-sink_socket.connect('tcp://localhost:5556')
+#baca alamat sink dari file
+file = open('sink', 'r')
+sink_socket.connect(file.read())
 
 #infinite loop! worker senantiasa menunggu kerjaan
 while True:

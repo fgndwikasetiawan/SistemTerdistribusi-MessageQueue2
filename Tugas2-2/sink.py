@@ -8,6 +8,9 @@ context = zmq.Context()
 #buat (zmq)socket yang terhubung dengan worker
 worker_socket = context.socket(zmq.PULL)
 worker_socket.bind('tcp://*:5556')
+#buat (zmq)socket yang terhubung dengan ventilator untuk mengirim pesan pekerjaan selesai
+ventilator_socket = context.socket(zmq.PUSH)
+ventilator_socket.connect('tcp://localhost:5557')
 
 #looping selamanya untuk menerima hasil dari worker
 while True:
@@ -20,6 +23,7 @@ while True:
     f.write(img_dict['data'].getvalue()) #karena img_dict['data'] tipenya SocketIO, maka kita harus memanggil getvalue() untuk mendapatkan stringnya
     f.close()
     print("Selesai menyimpan %s" % img_dict['nama'])
+    ventilator_socket.send_string("Selesai memproses %s" % img_dict['nama'])
     #selesai menyimpan satu file :)
 
 

@@ -1,0 +1,1 @@
+worker akan membaca alamat sink dan ventilator dari file sink dan ventilator
